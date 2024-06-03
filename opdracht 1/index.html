@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emmeloord - Nederland</title>
+    <style>
+        h1{
+            font-size: 40px;
+        }
+        #temperatureData {
+            font-size: 30px;
+            font-weight: bold;
+        }
+        img{
+            height: 80px;
+            width: 80px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Emmeloord - Nederland</h1>
+    <div id="temperatureData"> </div>
+    <img src="thermometer icoontje.png">
+    
+    <script>
+    // De URL van de API
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=52.7108&longitude=5.7486&current_weather=true';
+
+    // roept api aan en controleer of response oke is
+    async function fetchTemperatures() { 
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('response was niet gelukt' + response.statusText); 
+        }
+        //parse de json uit de response en logt naar console
+        const data = await response.json();
+        console.log('API Response:', data);
+
+        //haalt de huidige temperatuur op en zet alle date in de div
+        const currentTemperature = data.current_weather.temperature;
+        const temperatureDiv = document.getElementById('temperatureData');
+        temperatureDiv.textContent = `Het is momenteel ${currentTemperature}°C in Emmeloord`;
+
+        //pas de tekstkleur aan naar groen of rood
+        if (currentTemperature < 15) {
+          temperatureDiv.style.color = 'red'; 
+        } else {
+          temperatureDiv.style.color = 'green';
+        }
+        if (currentTemperature < 15){
+
+        }
+
+    // logt eventuele fouten naar console
+      } catch (error) {
+        console.error('er is een probleem met het ophalen:', error);
+        const temperatureDiv = document.getElementById('temperatureData');
+        temperatureDiv.textContent = 'Kon temperatuurgegevens niet ophalen.'; 
+        temperatureDiv.style.color = 'red';
+      }
+    }
+
+    fetchTemperatures();
+
+    //wordt elke minuut bij gewerkt
+    setInterval(fetchTemperatures,10000);
+    </script>
+</body>
+</html>
